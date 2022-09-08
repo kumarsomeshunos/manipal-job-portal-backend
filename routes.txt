@@ -1,0 +1,18 @@
+Public Routes
+--------------
+/
+/apply
+/openings
+/openings/:id
+/contact
+/about
+/login
+
+Protected Routes
+---------------
+/admin
+/admin/list
+/admin/list/:id
+/admin/new
+/admin/update/:id
+/admin/
