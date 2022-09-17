@@ -1,18 +1,18 @@
 Public Routes
 --------------
-/
-/apply
-/openings
-/openings/:id
-/contact
-/about
-/login
+/ -- GET
+/apply -- GET & POST
+/openings -- GET
+/openings/:id -- GET
+/contact -- GET
+/about -- GET
+/login --GET & POST
 
 Protected Routes
 ---------------
-/admin
-/admin/list
-/admin/list/:id
-/admin/new
-/admin/update/:id
+/admin -- GET
+/admin/list -- GET
+/admin/list/:id --GET
+/admin/new --GET & POST
+/admin/update/:id --GET & POST
 /admin/
