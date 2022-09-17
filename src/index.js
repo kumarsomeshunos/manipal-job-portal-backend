@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 
 import openingsRouter from "./routes/Openings.js";
 import adminAuthRouter from "./routes/AdminAuth.js";
-import applyRouter from "./routes/Apply.js";
+import applicationRouter from "./routes/Application.js";
+import dashboardRouter from "./routes/Dashboard.js";
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.get("/", (req, res) => {
   res.send("Homepage");
 });
 
-app.use("/apply", applyRouter);
+app.use("/applications", applicationRouter);
 
 app.use("/openings", openingsRouter);
 
