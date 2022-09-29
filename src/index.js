@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import openingsRouter from "./routes/Openings.js";
 import adminAuthRouter from "./routes/AdminAuth.js";
 import applicationRouter from "./routes/Application.js";
-import dashboardRouter from "./routes/Dashboard.js";
+// import dashboardRouter from "./routes/Dashboard.js";
 
 const app = express();
 
