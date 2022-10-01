@@ -1,49 +1,42 @@
-<<<<<<< HEAD
-import mongoose from "mongoose";
-import { uuid } from 'uuidv4';
+import mongoose, { mongo } from "mongoose";
 
 const ApplicantDetailsSchema = new mongoose.Schema({
 
-    firstName: { 
-        type: String,
-        required: [true, "Firstname is required"]
-    },
-    lastName: {
-        type: String,
-        required: [true, "Lastname is required"] 
-    },
-    dob: { 
-        type: Date,
-        required: [true, "Date of Birth is required"] 
-    },
-    gender: { 
-        type: String, 
-        enum: ['Male', 'Female'],
-        required: [true, "Gender is required"]
-    },
-    religion: { 
-        type: String,
-        required: [true, "Religion is required"]
-    },
-    marital_status: {
-        type: String,
-        required: [true, "Marital Status is required"]
-    },
-    mobile: { 
-        type: String,
-        required: [true, "Mobile Number is required"]
-    },
-    email: { 
-        type: String, 
-        lowercase: true,
-        required: [true, "Email is required"]
-    },
+  firstName: { 
+      type: String,
+      required: [true, "Firstname is required"]
+  },
+  lastName: {
+      type: String,
+      required: [true, "Lastname is required"] 
+  },
+  dob: { 
+      type: Date,
+      required: [true, "Date of Birth is required"] 
+  },
+  gender: { 
+      type: String, 
+      enum: ['Male', 'Female'],
+      required: [true, "Gender is required"]
+  },
+  religion: { 
+      type: String,
+      required: [true, "Religion is required"]
+  },
+  marital_status: {
+      type: String,
+      required: [true, "Marital Status is required"]
+  },
+  mobile: { 
+      type: String,
+      required: [true, "Mobile Number is required"]
+  },
+  email: { 
+      type: String, 
+      lowercase: true,
+      required: [true, "Email is required"]
+  },
 });
-
-=======
-import mongoose, { mongo } from "mongoose";
->>>>>>> 8fda0e68ef665daced86f0d6764ff5237e5f7615
-
 
 
 const higherSecondarySchema = new mongoose.Schema({
@@ -180,55 +173,13 @@ const knowInManipal = new mongoose.Schema({
 });
 
 const applicationSchema = new mongoose.Schema({
-<<<<<<< HEAD
 
-    uuid: {
-        type: String,
-        default: uuid
-    },
+  uuid: {
+      type: String,
+      default: uuid
+  },
     
-    applicant: ApplicantDetailsSchema,
-=======
-  // Application Information
-  firstName: {
-    type: String,
-    required: [false, "Firstname is required"],
-  },
-  lastName: {
-    type: String,
-    required: [false, "Lastname is required"],
-  },
-  dob: {
-    type: Date,
-    required: [false, "Date of Birth is required"],
-  },
-  gender: {
-    type: String,
-    enum: ["Male", "Female"],
-    required: [false, "Gender is required"],
-  },
-  religion: {
-    type: String,
-    required: [false, "Religion is required"],
-  },
-  marital_status: {
-    type: String,
-    required: [false, "Marital Status is required"],
-  },
-  mobile: {
-    type: String,
-    required: [false, "Mobile Number is required"],
-  },
-  email: {
-    type: String,
-    lowercase: false,
-    required: [false, "Email is required"],
-  },
-  faculty: {
-    type: String,
-    required: [false, "Faculty is required"],
-  },
->>>>>>> 8fda0e68ef665daced86f0d6764ff5237e5f7615
+  applicant: ApplicantDetailsSchema,
 
   school: {
     type: String,
