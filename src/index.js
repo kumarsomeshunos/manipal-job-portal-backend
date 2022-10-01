@@ -1,10 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
 
+require("dotenv").config();
+
 import openingsRouter from "./routes/Openings.js";
 import adminAuthRouter from "./routes/AdminAuth.js";
 import applicationRouter from "./routes/Application.js";
 // import dashboardRouter from "./routes/Dashboard.js";
+
+
 
 const app = express();
 

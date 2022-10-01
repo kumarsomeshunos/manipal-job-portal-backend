@@ -4,6 +4,10 @@ import Application from "../models/Application.js";
 
 const router = express.Router();
 
+router.get("/t", (req, res) => {
+	res.send(process.env.S3_BUCKET);
+})
+
 router.get("/", (req, res) => {
   // Fetch applications with pagination
   const page = req.query.page ? parseInt(req.query.page) : 1;
