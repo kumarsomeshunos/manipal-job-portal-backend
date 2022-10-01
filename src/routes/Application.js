@@ -65,44 +65,41 @@ router.get("/", (req, res) => {
   const results = {};
 
   Application.find()
-      .limit(limit)
-      .skip(startIndex)
-      .exec()
-      .then((applications) => {
-          results.results = applications;
-          results.count = applications.length;
-          if (endIndex < results.count) {
-              results.next = {
-                  page: page + 1,
-                  limit: limit,
-              };
-          }
-          if (startIndex > 0) {
-              results.previous = {
-                  page: page - 1,
-                  limit: limit,
-              };
-          }
-          res.json(results);
+    .limit(limit)
+    .skip(startIndex)
+    .exec()
+    .then((applications) => {
+      results.results = applications;
+      results.count = applications.length;
+      if (endIndex < results.count) {
+        results.next = {
+          page: page + 1,
+          limit: limit,
+        };
       }
-      )
-      .catch((error) => {
-          res.status(500).json({ message: error.message });
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit: limit,
+        };
       }
-      );
+      res.json(results);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message });
+    });
 });
 
 // router for getting specific application
 router.get("/:id", (req, res) => {
   Application.findById(req.params.id)
-      .then((application) => {
-          res.json(application);
-      })
-      .catch((error) => {
-          res.status(500).json({ message: error.message });
-      });
+    .then((application) => {
+      res.json(application);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message });
+    });
 });
-
 
 router.post("/", async (req, res) => {
 
@@ -110,7 +107,8 @@ router.post("/", async (req, res) => {
   await apply
     .save()
     .then((apply) => {
-      return res.json({ success: true, applyId: apply._id });
+        res.send(apply);
+    //   return res.json({ success: true, applyId: apply._id });
     })
     .catch((error) => {
       return res.status(500).json({ success: false, error: error });
