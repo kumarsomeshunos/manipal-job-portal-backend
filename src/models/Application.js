@@ -137,114 +137,114 @@ const applicationSchema = new mongoose.Schema({
   // Application Information
   firstName: {
     type: String,
-    required: [true, "Firstname is required"],
+    required: [false, "Firstname is required"],
   },
   lastName: {
     type: String,
-    required: [true, "Lastname is required"],
+    required: [false, "Lastname is required"],
   },
   dob: {
     type: Date,
-    required: [true, "Date of Birth is required"],
+    required: [false, "Date of Birth is required"],
   },
   gender: {
     type: String,
     enum: ["Male", "Female"],
-    required: [true, "Gender is required"],
+    required: [false, "Gender is required"],
   },
   religion: {
     type: String,
-    required: [true, "Religion is required"],
+    required: [false, "Religion is required"],
   },
   marital_status: {
     type: String,
-    required: [true, "Marital Status is required"],
+    required: [false, "Marital Status is required"],
   },
   mobile: {
     type: String,
-    required: [true, "Mobile Number is required"],
+    required: [false, "Mobile Number is required"],
   },
   email: {
     type: String,
-    lowercase: true,
-    required: [true, "Email is required"],
+    lowercase: false,
+    required: [false, "Email is required"],
   },
   faculty: {
     type: String,
-    required: [true, "Faculty is required"],
+    required: [false, "Faculty is required"],
   },
 
   school: {
     type: String,
-    required: [true, "School is required"],
+    required: [false, "School is required"],
   },
 
   department: {
     type: String,
-    required: [true, "Department is required"],
+    required: [false, "Department is required"],
   },
 
   acad_domain: {
     type: String,
-    required: [true, "Academic Domain is required"],
+    required: [false, "Academic Domain is required"],
   },
 
   nature_of_job: {
     type: String,
-    required: [true, "Nature of Job is required"],
+    required: [false, "Nature of Job is required"],
   },
 
   // Current Residence information
   cr_country: {
     type: String,
-    required: [true, "Country is required"],
+    required: [false, "Country is required"],
   },
   cr_state: {
     type: String,
-    required: [true, "State is required"],
+    required: [false, "State is required"],
   },
   cr_city: {
     type: String,
-    required: [true, "City is required"],
+    required: [false, "City is required"],
   },
 
   // Native place Information
   native_country: {
     type: String,
-    required: [true, "Country is required"],
+    required: [false, "Country is required"],
   },
   native_state: {
     type: String,
-    required: [true, "State is required"],
+    required: [false, "State is required"],
   },
 
   // ID Proof Information
   aadhaar_card: {
     type: String,
-    required: [true, "Aadhaar Number is required"],
+    required: [false, "Aadhaar Number is required"],
   },
   pan_card: {
     type: String,
-    required: [true, "PAN Number is required"],
+    required: [false, "PAN Number is required"],
   },
 
   // Academic Qualifications
   aq_higher_secondary: {
     type: higherSecondarySchema,
-    required: [true, "Higher Secondary Details are required"],
+    required: [false, "Higher Secondary Details are required"],
   },
 
   aq_graduation: [
     {
       type: graduationSchema,
-      required: [true, "Graduation Details are required"],
+      required: [false, "Graduation Details are required"],
     },
   ],
 
   aq_post_graduation: [
     {
       type: postGraduationSchema,
-      required: [true, "Post Graduation Details are required"],
+      required: [false, "Post Graduation Details are required"],
     },
   ],
 
@@ -273,14 +273,14 @@ const applicationSchema = new mongoose.Schema({
   academicExperience: [
     {
       type: academicExperienceSchema,
-      required: true,
+      required: false,
     },
   ],
 
   nonAcademicExperience: [
     {
       type: nonAcademicExperienceSchema,
-      required: true,
+      required: false,
     },
   ],
 
