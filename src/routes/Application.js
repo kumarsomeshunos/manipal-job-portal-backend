@@ -1,12 +1,58 @@
 import express from "express";
 
+import AWS from 'aws-sdk';
+import multer from 'multer';
+import multerS3 from 'multer-s3';
+import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+
 import Application from "../models/Application.js";
 
+dotenv.config()
 const router = express.Router();
 
-router.get("/t", (req, res) => {
-	res.send(process.env.S3_BUCKET);
-})
+// FILE UPLOAD CONFIG START
+const app = express();
+app.use(bodyParser.json());
+
+const spacesEndpoint = new AWS.Endpoint(process.env.S3_ENDPOINT || "s3.us-west-000.backblazeb2.com");
+const s3 = new AWS.S3({
+  endpoint: spacesEndpoint
+});
+
+var upload = await multer({
+    storage: multerS3({
+        s3: s3,
+        acl: 'public-read',
+        bucket: process.env.S3_BUCKET || "portaldev",
+        key: function (req, file, cb) {
+            console.log(file);
+            cb(null, Date.now() + '-' + file.originalname); 
+        }
+    })
+}).fields([{ name: 'picture', maxCount: 1 }, { name: 'resume', maxCount: 1 }]);
+
+// FILE UPLOAD CONFIG END
+
+router.post("/upload",  async (req, res) => {
+    
+    await upload(req, res, await function (error) {
+        if (error) {
+          return res.status(500).json({ status: false, message: "Something went while uploading. Please try again later." });
+        }
+        else {
+            console.log(req.body['uuid']);
+            uuid = req.body['uuid'];
+            
+        }
+        console.log(req.body)
+        console.log(req.files.resume[0].location);
+        console.log('File uploaded successfully.');
+        return res.send("DONE");
+      });
+
+});
+
 
 router.get("/", (req, res) => {
   // Fetch applications with pagination
@@ -59,6 +105,7 @@ router.get("/:id", (req, res) => {
 
 
 router.post("/", async (req, res) => {
+
   const apply = new Application(req.body);
   await apply
     .save()

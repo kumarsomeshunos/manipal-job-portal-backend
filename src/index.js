@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-
-require("dotenv").config();
+import dotenv from 'dotenv'
 
 import openingsRouter from "./routes/Openings.js";
 import adminAuthRouter from "./routes/AdminAuth.js";
@@ -9,11 +8,11 @@ import applicationRouter from "./routes/Application.js";
 // import dashboardRouter from "./routes/Dashboard.js";
 
 
-
+dotenv.config()
 const app = express();
 
 mongoose
-  .connect("mongodb://localhost:27017/manipaljob")
+  .connect(process.env.DB_URI)
   .then(() => {
     console.log("Mongo Connection Successful");
   })

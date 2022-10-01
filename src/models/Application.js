@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import { uuid } from 'uuidv4';
 
 const ApplicantDetailsSchema = new mongoose.Schema({
+
     firstName: { 
         type: String,
         required: [true, "Firstname is required"]
@@ -121,7 +123,13 @@ const qualificationSchema = new mongoose.Schema({
     
 
 const applicationSchema = new mongoose.Schema({
+
+    uuid: {
+        type: String,
+        default: uuid
+    },
     
+    applicant: ApplicantDetailsSchema,
 
     // Application Information
     faculty: {
