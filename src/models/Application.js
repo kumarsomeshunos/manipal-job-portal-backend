@@ -175,11 +175,6 @@ const knowInManipal = new mongoose.Schema({
 
 const applicationSchema = new mongoose.Schema({
 
-	// uuid: {
-	// 	type: String,
-	// 	default: uuidv4
-	// },
-
 	status: {
 		type: String,
 		enum: ['draft', 'submitted']
@@ -284,6 +279,7 @@ const applicationSchema = new mongoose.Schema({
 
 	// Qualification Details
 	// qualifications: qualificationSchema,
+	academicQualification : academicQualificationSchema,
 
 	// Experience Details
 	academicExperience: [
