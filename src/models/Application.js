@@ -177,7 +177,13 @@ const applicationSchema = new mongoose.Schema({
 
 	status: {
 		type: String,
-		enum: ['draft', 'submitted']
+		enum: ['draft', 'submitted', 'approved', 'rejected'],
+		default: 'draft'
+	},
+
+	viewCount: {
+		type: Number,
+		default: 0
 	},
 
 	applicant: {

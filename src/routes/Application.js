@@ -117,6 +117,9 @@ router.get("/:id", (req, res) => {
     Application.findById(req.params.id)
         .then((application) => {
             res.json(application);
+            // increment seen count
+            application.viewCount += 1;
+            application.save();
         })
         .catch((error) => {
             res.status(500).json({ message: error.message });
