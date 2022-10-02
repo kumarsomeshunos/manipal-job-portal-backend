@@ -1,4 +1,5 @@
 import mongoose, { mongo } from "mongoose";
+import { v4 as uuidv4 } from 'uuid';
 
 const ApplicantDetailsSchema = new mongoose.Schema({
 
@@ -174,12 +175,20 @@ const knowInManipal = new mongoose.Schema({
 
 const applicationSchema = new mongoose.Schema({
 
-	uuid: {
+	// uuid: {
+	// 	type: String,
+	// 	default: uuidv4
+	// },
+
+	status: {
 		type: String,
-		default: uuid
+		enum: ['draft', 'submitted']
 	},
 
-	applicant: ApplicantDetailsSchema,
+	applicant: {
+		type: ApplicantDetailsSchema,
+		required: [true, "Applicant Details are required"]
+	},
 
 	school: {
 		type: String,
@@ -484,6 +493,14 @@ const applicationSchema = new mongoose.Schema({
 		type: Boolean,
 	},
 	caseDetails: {
+		type: String,
+	},
+
+	// FILES
+	resume: {
+		type: String,
+	},
+	photo: {
 		type: String,
 	},
 });
