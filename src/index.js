@@ -5,14 +5,20 @@ import dotenv from 'dotenv'
 import openingsRouter from "./routes/Openings.js";
 import adminAuthRouter from "./routes/AdminAuth.js";
 import applicationRouter from "./routes/Application.js";
+import cors from 'cors';
 // import dashboardRouter from "./routes/Dashboard.js";
 
 
 dotenv.config()
 const app = express();
 
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
+
+
 mongoose
-  .connect(process.env.DB_URI)
+  .connect(process.env.DB_URI || "mongodb+srv://event:event@jobportalcluster.amjyw4q.mongodb.net/jobportal?retryWrites=true&w=majority")
   .then(() => {
     console.log("Mongo Connection Successful");
   })
