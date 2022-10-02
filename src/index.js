@@ -18,7 +18,7 @@ app.use(cors({
 
 
 mongoose
-  .connect(process.env.DB_URI || "mongodb+srv://event:event@jobportalcluster.amjyw4q.mongodb.net/jobportal?retryWrites=true&w=majority")
+  .connect(process.env.DB_URI)
   .then(() => {
     console.log("Mongo Connection Successful");
   })

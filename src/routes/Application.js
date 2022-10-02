@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 
 import Application from "../models/Application.js";
+import {SendEmail} from '../utils.js'
 
 dotenv.config()
 const router = express.Router();
@@ -75,6 +76,7 @@ router.post("/upload", async (req, res) => {
 
 
 router.get("/", (req, res) => {
+
     // Fetch applications with pagination
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
@@ -127,7 +129,7 @@ router.post("/", async (req, res) => {
     await apply
         .save()
         .then((apply) => {
-            // res.send(apply);
+            SendEmail(apply.applicant.email, "Form submitted", "Thank you for submitting the form. We will get back to you soon.");
             return res.json({ success: true, applyId: apply._id });
         })
         .catch((error) => {
