@@ -1,5 +1,8 @@
 import mongoose, { mongo } from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
+import Inc from 'mongoose-sequence';
+
+const AutoIncrement = Inc(mongoose);
 
 const ApplicantDetailsSchema = new mongoose.Schema({
 
@@ -177,7 +180,7 @@ const applicationSchema = new mongoose.Schema({
 
 	status: {
 		type: String,
-		enum: ['draft', 'submitted', 'approved', 'rejected'],
+		enum: ['draft', 'submitted', 'under_consideration', 'approved', 'rejected'],
 		default: 'draft'
 	},
 
@@ -187,18 +190,29 @@ const applicationSchema = new mongoose.Schema({
 	},
 
 	applicant: {
-		type: ApplicantDetailsSchema,
+		type: {ApplicantDetailsSchema},
 		required: [true, "Applicant Details are required"]
+	},
+
+	jobType: {
+		type: String,
+		enum: ['academic', 'non_academic', 'administration'],
+		required: [true, "Position Type is required"]
+	},
+
+	faculty: {
+		type: String,
+		required: [true, "Faculty is required"]
 	},
 
 	school: {
 		type: String,
-		required: [false, "School is required"],
+		required: [true, "School is required"],
 	},
 
 	department: {
 		type: String,
-		required: [false, "Department is required"],
+		required: [true, "Department is required"],
 	},
 
 	acad_domain: {
@@ -285,7 +299,7 @@ const applicationSchema = new mongoose.Schema({
 
 	// Qualification Details
 	// qualifications: qualificationSchema,
-	academicQualification : academicQualificationSchema,
+	academicQualification: academicQualificationSchema,
 
 	// Experience Details
 	academicExperience: [
@@ -505,7 +519,26 @@ const applicationSchema = new mongoose.Schema({
 	photo: {
 		type: String,
 	},
+}, {
+	timestamps: true,
+	toObject: { virtuals: true },
+	toJSON: { virtuals: true }
+	
+	});
+
+applicationSchema.plugin(AutoIncrement, { inc_field: 'id' });
+
+
+// Virtual field for formatting date time using built in libraries
+applicationSchema.virtual('createdDate').get(function () {
+	return moment(this.createdAt).format('MMMM Do, YYYY');
 });
+
+// Virtual field for full name
+applicationSchema.virtual('fullName').get(function () {
+	return `${this.firstName} ${this.lastName}`;
+});
+
 
 /*
  *   Export all the models

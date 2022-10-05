@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 
 import Application from "../models/Application.js";
-import {SendEmail} from '../utils.js'
+import { SendEmail } from '../utils.js'
 
 dotenv.config()
 const router = express.Router();
@@ -22,7 +22,7 @@ const s3 = new AWS.S3({
 });
 
 var upload = await multer({
-    limits: { 
+    limits: {
         // limit 3 mb
         fileSize: 3 * 1024 * 1024
     },
@@ -37,7 +37,7 @@ var upload = await multer({
     })
 }).fields([{ name: 'picture', maxCount: 1 }, { name: 'resume', maxCount: 1 }]);
 
-  
+
 
 // FILE UPLOAD CONFIG END
 
@@ -46,11 +46,11 @@ router.post("/upload", async (req, res) => {
     Application.findOne({ id: req.body.id }, async (err, application) => {
         if (err) {
             console.log(err);
-            if (err.code ==='LIMIT_FILE_SIZE'){
-                return res.status(500).json({msg: 'File size is too large. Allowed file size is 3MB Each File'});
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(500).json({ msg: 'File size is too large. Allowed file size is 3MB Each File' });
             }
             else {
-                res.status(500).json({msg: 'Error while uploading file'});
+                res.status(500).json({ msg: 'Error while uploading file' });
             }
         } else {
             if (application) {
@@ -75,18 +75,58 @@ router.post("/upload", async (req, res) => {
 });
 
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
 
-    // Fetch applications with pagination
+    // Fetch applications with pagination and filtering
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+
+    let filter = {};
+    (req.query.jobType) ? filter.jobType = req.query.jobType : null;
+    (req.query.faculty) ? filter.faculty = req.query.faculty : null;
+    (req.query.school) ? filter.school = req.query.school : null;
+    (req.query.department) ? filter.department = req.query.department : null;
+
+    if (req.query.startDate && req.query.endDate) {
+        filter.createdAt = {
+            $gte: new Date(parseInt(req.query.startDate)),
+            $lte: new Date(parseInt(req.query.endDate))
+        }
+    }
+
+    // if (req.query.searchName) {
+    //     // // search fullname in firstname and lastname
+    //     // filter.$or = [
+    //     //     { applicant: { firstName: { $regex: req.query.searchName, $options: 'i' } } },
+    //     //     { applicant: { lastName: { $regex: req.query.searchName, $options: 'i' } } }
+    //     // ]
+    //     filter.firstName = {applicant: { $regex: '.*' + req.query.searchName + '.*' } }}
+    // }
+
+
+
 
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
     const results = {};
 
-    Application.find()
+    results.stats = {};
+    results.stats.totalSubmitted = await Application.countDocuments({ "status": { $ne: "draft" } });
+    results.stats.totalAcademic = await Application.countDocuments({ "jobType": "academic", "status": { $ne: "draft" } });
+    results.stats.totalNonAcademic = await Application.countDocuments({ "jobType": "non_academic", "status": { $ne: "draft" } });
+    results.stats.totalAdmin = await Application.countDocuments({ "jobType": "administration", "status": { $ne: "draft" } });
+
+    var filter_final = null;
+    if (req.query.searchName){
+        filter_final = {...filter, applicant: {firstName: {$regex: req.query.searchName, $options: 'i'}}}
+    }
+    else{
+        filter_final = filter
+    }
+
+    console.log(filter_final);
+    Application.find(filter_final)
         .limit(limit)
         .skip(startIndex)
         .exec()
