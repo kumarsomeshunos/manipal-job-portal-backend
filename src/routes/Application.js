@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 
 import Application from "../models/Application.js";
 import { SendEmail } from '../utils.js'
+import facultiesList from '../faculties.js'
 
 dotenv.config()
 const router = express.Router();
@@ -74,6 +75,45 @@ router.post("/upload", async (req, res) => {
 
 });
 
+// serve facultiesList json to frontend
+router.get("/faculties", async (req, res) => {
+    res.status(200).json(facultiesList);
+});
+
+router.get("/stats", async (req, res) => {
+    let month = new Date().getMonth();
+    const results = {};
+
+    results.stats = {};
+    results.stats.total = await Application.countDocuments();
+    results.stats.totalSubmitted = await Application.countDocuments({ "status": { $ne: "draft" } });
+    results.stats.totalAcademic = await Application.countDocuments({ "jobType": "academic", "status": { $ne: "draft" } });
+    results.stats.totalNonAcademic = await Application.countDocuments({ "jobType": "non_academic", "status": { $ne: "draft" } });
+    results.stats.totalAdmin = await Application.countDocuments({ "jobType": "administration", "status": { $ne: "draft" } });
+
+    results.stats.thisMonth = await Application.countDocuments({ "createdAt": { $gte: new Date(new Date().setDate(1)) } });
+    results.stats.thisYear = await Application.countDocuments({ "createdAt": { $gte: new Date(new Date().setMonth(1)) } });
+
+    results.stats.byMonth = await Application.aggregate([
+        {
+            $match: { "createdAt": { $gte: new Date(new Date().setDate(1)) } }
+        },
+        {
+            $group: {
+                _id: {
+                    month: { $month: "$createdAt" },
+                    year: { $year: "$createdAt" }
+                },
+                count: { $sum: 1 }
+            }
+        }
+    ]);
+
+
+    res.json(results);
+
+
+});
 
 router.get("/", async (req, res) => {
 
@@ -86,6 +126,7 @@ router.get("/", async (req, res) => {
     (req.query.faculty) ? filter.faculty = req.query.faculty : null;
     (req.query.school) ? filter.school = req.query.school : null;
     (req.query.department) ? filter.department = req.query.department : null;
+    (req.query.status) ? filter.status = req.query.status : null;
 
     if (req.query.startDate && req.query.endDate) {
         filter.createdAt = {
@@ -111,17 +152,11 @@ router.get("/", async (req, res) => {
 
     const results = {};
 
-    results.stats = {};
-    results.stats.totalSubmitted = await Application.countDocuments({ "status": { $ne: "draft" } });
-    results.stats.totalAcademic = await Application.countDocuments({ "jobType": "academic", "status": { $ne: "draft" } });
-    results.stats.totalNonAcademic = await Application.countDocuments({ "jobType": "non_academic", "status": { $ne: "draft" } });
-    results.stats.totalAdmin = await Application.countDocuments({ "jobType": "administration", "status": { $ne: "draft" } });
-
     var filter_final = null;
-    if (req.query.searchName){
-        filter_final = {...filter, applicant: {firstName: {$regex: req.query.searchName, $options: 'i'}}}
+    if (req.query.searchName) {
+        filter_final = { ...filter, applicant: { firstName: { $regex: req.query.searchName, $options: 'i' } } }
     }
-    else{
+    else {
         filter_final = filter
     }
 
@@ -168,6 +203,7 @@ router.get("/:id", (req, res) => {
 
 router.post("/", async (req, res) => {
 
+    console.log(req.body);
     const apply = new Application(req.body);
     await apply
         .save()
@@ -178,6 +214,16 @@ router.post("/", async (req, res) => {
         .catch((error) => {
             console.log(error);
             return res.status(500).json({ success: false, error: error });
+        });
+});
+
+router.delete("/:id", (req, res) => {
+    Application.findByIdAndDelete(req.params.id)
+        .then((application) => {
+            res.json({ message: "Application deleted" });
+        })
+        .catch((error) => {
+            res.status(500).json({ message: error.message });
         });
 });
 

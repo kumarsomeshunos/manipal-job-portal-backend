@@ -190,7 +190,7 @@ const applicationSchema = new mongoose.Schema({
 	},
 
 	applicant: {
-		type: {ApplicantDetailsSchema},
+		type: ApplicantDetailsSchema,
 		required: [true, "Applicant Details are required"]
 	},
 
