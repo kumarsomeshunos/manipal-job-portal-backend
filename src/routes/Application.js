@@ -7,7 +7,8 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 
 import Application from "../models/Application.js";
-import {SendEmail} from '../utils.js'
+import { SendEmail } from '../utils.js'
+import facultiesList from '../faculties.js'
 
 dotenv.config()
 const router = express.Router();
@@ -22,7 +23,7 @@ const s3 = new AWS.S3({
 });
 
 var upload = await multer({
-    limits: { 
+    limits: {
         // limit 3 mb
         fileSize: 3 * 1024 * 1024
     },
@@ -37,7 +38,7 @@ var upload = await multer({
     })
 }).fields([{ name: 'picture', maxCount: 1 }, { name: 'resume', maxCount: 1 }]);
 
-  
+
 
 // FILE UPLOAD CONFIG END
 
@@ -46,11 +47,11 @@ router.post("/upload", async (req, res) => {
     Application.findOne({ id: req.body.id }, async (err, application) => {
         if (err) {
             console.log(err);
-            if (err.code ==='LIMIT_FILE_SIZE'){
-                return res.status(500).json({msg: 'File size is too large. Allowed file size is 3MB Each File'});
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(500).json({ msg: 'File size is too large. Allowed file size is 3MB Each File' });
             }
             else {
-                res.status(500).json({msg: 'Error while uploading file'});
+                res.status(500).json({ msg: 'Error while uploading file' });
             }
         } else {
             if (application) {
@@ -74,19 +75,93 @@ router.post("/upload", async (req, res) => {
 
 });
 
+// serve facultiesList json to frontend
+router.get("/faculties", async (req, res) => {
+    res.status(200).json(facultiesList);
+});
 
-router.get("/", (req, res) => {
+router.get("/stats", async (req, res) => {
+    let month = new Date().getMonth();
+    const results = {};
 
-    // Fetch applications with pagination
+    results.stats = {};
+    results.stats.total = await Application.countDocuments();
+    results.stats.totalSubmitted = await Application.countDocuments({ "status": { $ne: "draft" } });
+    results.stats.totalAcademic = await Application.countDocuments({ "jobType": "academic", "status": { $ne: "draft" } });
+    results.stats.totalNonAcademic = await Application.countDocuments({ "jobType": "non_academic", "status": { $ne: "draft" } });
+    results.stats.totalAdmin = await Application.countDocuments({ "jobType": "administration", "status": { $ne: "draft" } });
+
+    results.stats.thisMonth = await Application.countDocuments({ "createdAt": { $gte: new Date(new Date().setDate(1)) } });
+    results.stats.thisYear = await Application.countDocuments({ "createdAt": { $gte: new Date(new Date().setMonth(1)) } });
+
+    results.stats.byMonth = await Application.aggregate([
+        {
+            $match: { "createdAt": { $gte: new Date(new Date().setDate(1)) } }
+        },
+        {
+            $group: {
+                _id: {
+                    month: { $month: "$createdAt" },
+                    year: { $year: "$createdAt" }
+                },
+                count: { $sum: 1 }
+            }
+        }
+    ]);
+
+
+    res.json(results);
+
+
+});
+
+router.get("/", async (req, res) => {
+
+    // Fetch applications with pagination and filtering
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+
+    let filter = {};
+    (req.query.jobType) ? filter.jobType = req.query.jobType : null;
+    (req.query.faculty) ? filter.faculty = req.query.faculty : null;
+    (req.query.school) ? filter.school = req.query.school : null;
+    (req.query.department) ? filter.department = req.query.department : null;
+    (req.query.status) ? filter.status = req.query.status : null;
+
+    if (req.query.startDate && req.query.endDate) {
+        filter.createdAt = {
+            $gte: new Date(parseInt(req.query.startDate)),
+            $lte: new Date(parseInt(req.query.endDate))
+        }
+    }
+
+    // if (req.query.searchName) {
+    //     // // search fullname in firstname and lastname
+    //     // filter.$or = [
+    //     //     { applicant: { firstName: { $regex: req.query.searchName, $options: 'i' } } },
+    //     //     { applicant: { lastName: { $regex: req.query.searchName, $options: 'i' } } }
+    //     // ]
+    //     filter.firstName = {applicant: { $regex: '.*' + req.query.searchName + '.*' } }}
+    // }
+
+
+
 
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
     const results = {};
 
-    Application.find()
+    var filter_final = null;
+    if (req.query.searchName) {
+        filter_final = { ...filter, applicant: { firstName: { $regex: req.query.searchName, $options: 'i' } } }
+    }
+    else {
+        filter_final = filter
+    }
+
+    console.log(filter_final);
+    Application.find(filter_final)
         .limit(limit)
         .skip(startIndex)
         .exec()
@@ -128,6 +203,7 @@ router.get("/:id", (req, res) => {
 
 router.post("/", async (req, res) => {
 
+    console.log(req.body);
     const apply = new Application(req.body);
     await apply
         .save()
@@ -138,6 +214,16 @@ router.post("/", async (req, res) => {
         .catch((error) => {
             console.log(error);
             return res.status(500).json({ success: false, error: error });
+        });
+});
+
+router.delete("/:id", (req, res) => {
+    Application.findByIdAndDelete(req.params.id)
+        .then((application) => {
+            res.json({ message: "Application deleted" });
+        })
+        .catch((error) => {
+            res.status(500).json({ message: error.message });
         });
 });
 
