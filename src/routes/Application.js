@@ -9,6 +9,8 @@ import bodyParser from 'body-parser';
 import Application from "../models/Application.js";
 import { SendEmail } from '../utils.js'
 import facultiesList from '../faculties.js'
+import auth from '../middleware/auth.js'
+
 
 dotenv.config()
 const router = express.Router();
@@ -16,6 +18,7 @@ const router = express.Router();
 // FILE UPLOAD CONFIG START
 const app = express();
 app.use(bodyParser.json());
+
 
 const spacesEndpoint = new AWS.Endpoint(process.env.S3_ENDPOINT || "s3.us-west-000.backblazeb2.com");
 const s3 = new AWS.S3({
@@ -42,9 +45,11 @@ var upload = await multer({
 
 // FILE UPLOAD CONFIG END
 
-router.post("/upload", async (req, res) => {
+router.put("/:id", async (req, res) => {
 
-    Application.findOne({ id: req.body.id }, async (err, application) => {
+    console.log(req.body);
+
+    Application.findOne({ _id: req.params.id }, async (err, application) => {
         if (err) {
             console.log(err);
             if (err.code === 'LIMIT_FILE_SIZE') {
@@ -63,12 +68,13 @@ router.post("/upload", async (req, res) => {
                         console.log(req.files);
                         application.photo = req.files.picture[0].location;
                         application.resume = req.files.resume[0].location;
+                        application.status = "submitted";
                         application.save();
                         res.status(200).send("File uploaded successfully");
                     }
                 });
             } else {
-                res.status(404).send("Application not found");
+                res.status(404).send("Application " + req.params.id + " not found");
             }
         }
     });
@@ -94,20 +100,45 @@ router.get("/stats", async (req, res) => {
     results.stats.thisMonth = await Application.countDocuments({ "createdAt": { $gte: new Date(new Date().setDate(1)) } });
     results.stats.thisYear = await Application.countDocuments({ "createdAt": { $gte: new Date(new Date().setMonth(1)) } });
 
-    results.stats.byMonth = await Application.aggregate([
-        {
-            $match: { "createdAt": { $gte: new Date(new Date().setDate(1)) } }
-        },
+    // 1 to 12 array of month with number of applications using aggregate
+
+    results.stats.monthly = await Application.aggregate([
         {
             $group: {
-                _id: {
-                    month: { $month: "$createdAt" },
-                    year: { $year: "$createdAt" }
-                },
+                _id: { $month: "$createdAt" },
                 count: { $sum: 1 }
             }
         }
     ]);
+
+    // let months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    // results.stats.monthly = await Application.aggregate([
+    // {
+    //     $group: {
+    //     _id: {
+    //         year: { $year: "$createdAt" },
+    //         month: { $month: "$createdAt" }
+    //     },
+    //     numShops: { $sum: 1 }
+    //     }
+    // },
+    // {
+    //     $project: {
+    //     _id: 0,
+    //     numShops: 1,
+    //     date: {
+    //         $concat: [
+    //         { $arrayElemAt: [months, "$_id.month"] },
+    //         "-",
+    //         { $toString: "$_id.year" }
+    //         ]
+    //     }
+    //     }
+    // }
+    // ])
+
+
+
 
 
     res.json(results);
@@ -134,18 +165,6 @@ router.get("/", async (req, res) => {
             $lte: new Date(parseInt(req.query.endDate))
         }
     }
-
-    // if (req.query.searchName) {
-    //     // // search fullname in firstname and lastname
-    //     // filter.$or = [
-    //     //     { applicant: { firstName: { $regex: req.query.searchName, $options: 'i' } } },
-    //     //     { applicant: { lastName: { $regex: req.query.searchName, $options: 'i' } } }
-    //     // ]
-    //     filter.firstName = {applicant: { $regex: '.*' + req.query.searchName + '.*' } }}
-    // }
-
-
-
 
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
