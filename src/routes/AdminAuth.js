@@ -1,42 +1,69 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 import Admin from "../models/Admin.js";
 
 const router = express.Router();
 
+// dotenv
+dotenv.config();
+
 router.get("/login", (req, res) => {
   res.send("Login Get");
 });
 
-router.post("/login", async (req, res) => {
-  const admin = await Admin.findOne({ username: req.body.username });
-  if (!admin) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Username not found!" });
-  }
-  const validPass = await bcrypt.compare(req.body.password, admin.password);
-  if (!validPass) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Password is incorrect" });
-  } else {
-    res.send({ success: true, admin: { username: admin.username } });
+
+// Complete register function
+router.post("/register", async (req, res) => {
+  const { name, username, password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const result = await Admin.create({
+      name,
+      username,
+      password: hashedPassword,
+    });
+
+    console.log(result);
+    res.status(201).send();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
   }
 });
 
-router.post("/register", async (req, res) => {
-  req.body.password = await bcrypt.hash(req.body.password, saltRounds);
-  const admin = new Admin(req.body);
-  await admin
-    .save()
-    .then((admin) => {
-      return res.json({ success: true, adminId: admin._id });
-    })
-    .catch((error) => {
-      return res.status(500).json({ success: false, error: error });
-    });
+// Complete login function
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await Admin.findOne({ username });
+
+    if (user) {
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (isPasswordCorrect) {
+        const token = jwt.sign(
+          { username: user.username, id: user._id },
+          process.env.TOKEN_SECRET,
+          { expiresIn: "1h" }
+        );
+
+        res.status(200).json({ token });
+      } else {
+        res.status(404).json({ message: "Invalid credentials" });
+      }
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
 });
 
 export default router;
