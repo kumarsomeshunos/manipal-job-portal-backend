@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import openingsRouter from "./routes/Openings.js";
 import adminAuthRouter from "./routes/AdminAuth.js";
 import applicationRouter from "./routes/Application.js";
+import imageRouter from "./routes/Images.js"
 import cors from 'cors';
 // import dashboardRouter from "./routes/Dashboard.js";
 
@@ -35,6 +36,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Homepage");
 });
+
+app.use("/image", imageRouter);
 
 app.use("/applications", applicationRouter);
 
