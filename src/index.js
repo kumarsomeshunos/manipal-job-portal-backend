@@ -43,14 +43,14 @@ app.use("/applications", applicationRouter);
 
 app.use("/openings", openingsRouter);
 
+app.use("/", adminAuthRouter);
+
 app.get("/contact", (req, res) => {
   res.send("Contact");
 });
 app.get("/about", (req, res) => {
   res.send("About");
 });
-
-app.use("/", adminAuthRouter);
 
 app.listen(3000, () => {
   {
