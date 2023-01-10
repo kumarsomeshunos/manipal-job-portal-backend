@@ -52,8 +52,9 @@ router.post("/login", async (req, res) => {
           process.env.TOKEN_SECRET,
           { expiresIn: "1h" }
         );
+        // TEMP
           res.redirect("https://job-portal-olive.vercel.app/admin/dashboard")
-        // res.status(200).json({ token });
+        res.status(200).json({ token });
       } else {
         res.status(404).json({ message: "Invalid credentials" });
       }
