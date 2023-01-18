@@ -19,7 +19,7 @@ const ApplicantDetailsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female"],
+    enum: ["male", "female"],
     required: [true, "Gender is required"],
   },
   religion: {
