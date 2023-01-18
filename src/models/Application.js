@@ -195,28 +195,28 @@ const applicationSchema = new mongoose.Schema(
 
     applicant: {
       type: ApplicantDetailsSchema,
-      required: [true, "Applicant Details are required"],
+      required: [false, "Applicant Details are required"],
     },
 
     jobType: {
       type: String,
       enum: ["academic", "non_academic", "administration"],
-      required: [true, "Position Type is required"],
+      required: [false, "Position Type is required"],
     },
 
     faculty: {
       type: String,
-      required: [true, "Faculty is required"],
+      required: [false, "Faculty is required"],
     },
 
     school_main: {
       type: String,
-      required: [true, "School is required"],
+      required: [false, "School is required"],
     },
 
     department: {
       type: String,
-      required: [true, "Department is required"],
+      required: [false, "Department is required"],
     },
 
     acad_domain: {
