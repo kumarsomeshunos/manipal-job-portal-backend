@@ -160,7 +160,7 @@ router.get("/stats", async (req, res) => {
 router.get("/", async (req, res) => {
   // Fetch applications with pagination and filtering
   const page = req.query.page ? parseInt(req.query.page) : 1;
-  const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
 
   let filter = {};
   req.query.jobType ? (filter.jobType = req.query.jobType) : null;
