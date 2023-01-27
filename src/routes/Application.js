@@ -410,15 +410,24 @@ router.post("/downloadcsv", async (req, res) => {
         res.status(500).json({ message: error.message });
       });
   }
-  csvWriter
+  await csvWriter
     .writeRecords(records) // returns a promise
     .then(() => {
       console.log(records);
-      return res.json({ success: true });
     })
     .catch((error) => {
       res.status(500).json({ message: error.message });
     });
+
+  res.download("/home/somesh/mystuff/Manipal-Job-Portal/manipal-job-portal-backend/file.csv", "applicants_data.csv", (error) => {
+    if (error) {
+      console.log(error);
+      console.log(res.headersSent);
+    } else {
+      console.log("File download link sent");
+    }
+  });
+  // return res.json({ success: true });
 });
 
 export default router;
