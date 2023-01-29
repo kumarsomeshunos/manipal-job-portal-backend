@@ -10,7 +10,7 @@ import cors from 'cors';
 // import dashboardRouter from "./routes/Dashboard.js";
 
 
-dotenv.config()
+dotenv.config({path:'./.env'})
 const app = express();
 
 app.use(cors({
@@ -52,8 +52,8 @@ app.get("/about", (req, res) => {
   res.send("About");
 });
 
-app.listen(3000, () => {
+app.listen(4000, () => {
   {
-    console.log("Listening on port 3000");
+    console.log("Listening on port 4000");
   }
 });

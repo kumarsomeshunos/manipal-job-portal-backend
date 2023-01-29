@@ -258,6 +258,10 @@ router.delete("/:id", (req, res) => {
 });
 
 router.post("/downloadcsv", async (req, res) => {
+  console.log(req.body);
+  req.body.forEach(element => {
+    console.log(element);
+  });
   const records = [];
   const csvWriter = createCsvWriter({
     path: "./file.csv",
@@ -330,7 +334,9 @@ router.post("/downloadcsv", async (req, res) => {
       { id: "aqphd_year2", title: "AQ PHD YEAR 2" },
     ],
   });
-  for (const id of req.body) {
+
+
+req.body.forEach(async (id)=>{
     await Application.findById(id.toString())
       .then((application) => {
         console.log(application);
@@ -409,7 +415,7 @@ router.post("/downloadcsv", async (req, res) => {
       .catch((error) => {
         res.status(500).json({ message: error.message });
       });
-  }
+  });
   await csvWriter
     .writeRecords(records) // returns a promise
     .then(() => {
@@ -419,7 +425,7 @@ router.post("/downloadcsv", async (req, res) => {
       res.status(500).json({ message: error.message });
     });
 
-  res.download("/home/somesh/mystuff/Manipal-Job-Portal/manipal-job-portal-backend/file.csv", "applicants_data.csv", (error) => {
+  res.download("./file.csv", "applicants_data.csv", (error) => {
     if (error) {
       console.log(error);
       console.log(res.headersSent);
@@ -427,7 +433,7 @@ router.post("/downloadcsv", async (req, res) => {
       console.log("File download link sent");
     }
   });
-  // return res.json({ success: true });
+  return res.json({ success: true });
 });
 
 export default router;
