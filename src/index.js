@@ -17,6 +17,7 @@ app.use(cors({
     origin: true,
 }));
 
+mongoose.set('strictQuery', true);
 
 mongoose
   .connect(process.env.DB_URI)
@@ -52,8 +53,8 @@ app.get("/about", (req, res) => {
   res.send("About");
 });
 
-app.listen(4000, () => {
+app.listen(3000, () => {
   {
-    console.log("Listening on port 4000");
+    console.log("Listening on port 3000");
   }
 });

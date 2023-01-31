@@ -258,8 +258,7 @@ router.delete("/:id", (req, res) => {
 });
 
 router.post("/downloadcsv", async (req, res) => {
-  console.log(req.body);
-  req.body.forEach(element => {
+  req.body.ids.forEach((element) => {
     console.log(element);
   });
   const records = [];
@@ -335,8 +334,7 @@ router.post("/downloadcsv", async (req, res) => {
     ],
   });
 
-
-req.body.forEach(async (id)=>{
+  for (const id of req.body.ids) {
     await Application.findById(id.toString())
       .then((application) => {
         console.log(application);
@@ -380,42 +378,43 @@ req.body.forEach(async (id)=>{
           aqhs_division: application.aq_higher_secondary.division,
           aqhs_percentage: application.aq_higher_secondary.percentage,
 
-          aqgr_country: application.aq_graduation[0].country,
-          aqgr_mode: application.aq_graduation[0].mode,
-          aqgr_institute: application.aq_graduation[0].institute,
-          aqgr_college: application.aq_graduation[0].college,
-          aqgr_year: application.aq_graduation[0].year,
-          aqgr_area: application.aq_graduation[0].area,
-          aqgr_course: application.aq_graduation[0].course,
-          aqgr_division: application.aq_graduation[0].division,
-          aqgr_percentage: application.aq_graduation[0].percentage,
+          // aqgr_country: application.aq_graduation[0].country,
+          // aqgr_mode: application.aq_graduation[0].mode,
+          // aqgr_institute: application.aq_graduation[0].institute,
+          // aqgr_college: application.aq_graduation[0].college,
+          // aqgr_year: application.aq_graduation[0].year,
+          // aqgr_area: application.aq_graduation[0].area,
+          // aqgr_course: application.aq_graduation[0].course,
+          // aqgr_division: application.aq_graduation[0].division,
+          // aqgr_percentage: application.aq_graduation[0].percentage,
 
-          aqpg_country: application.aq_post_graduation[0].country,
-          aqpg_mode: application.aq_post_graduation[0].mode,
-          aqpg_institute: application.aq_post_graduation[0].institute,
-          aqpg_college: application.aq_post_graduation[0].college,
-          aqpg_year: application.aq_post_graduation[0].year,
-          aqpg_area: application.aq_post_graduation[0].area,
-          aqpg_course: application.aq_post_graduation[0].course,
-          aqpg_division: application.aq_post_graduation[0].division,
-          aqpg_percentage: application.aq_post_graduation[0].percentage,
+          // aqpg_country: application.aq_post_graduation[0].country,
+          // aqpg_mode: application.aq_post_graduation[0].mode,
+          // aqpg_institute: application.aq_post_graduation[0].institute,
+          // aqpg_college: application.aq_post_graduation[0].college,
+          // aqpg_year: application.aq_post_graduation[0].year,
+          // aqpg_area: application.aq_post_graduation[0].area,
+          // aqpg_course: application.aq_post_graduation[0].course,
+          // aqpg_division: application.aq_post_graduation[0].division,
+          // aqpg_percentage: application.aq_post_graduation[0].percentage,
 
-          aqphd_country: application.aq_phd[0].country,
-          aqphd_mode: application.aq_phd[0].mode,
-          aqphd_institute: application.aq_phd[0].institute,
-          aqphd_college: application.aq_phd[0].college,
-          aqphd_year: application.aq_phd[0].year,
-          aqphd_area: application.aq_phd[0].area,
-          aqphd_teachingExperience: application.aq_phd[0].teachingExperience,
-          aqphd_year2: application.aq_phd[0].year2,
+          // aqphd_country: application.aq_phd[0].country,
+          // aqphd_mode: application.aq_phd[0].mode,
+          // aqphd_institute: application.aq_phd[0].institute,
+          // aqphd_college: application.aq_phd[0].college,
+          // aqphd_year: application.aq_phd[0].year,
+          // aqphd_area: application.aq_phd[0].area,
+          // aqphd_teachingExperience: application.aq_phd[0].teachingExperience,
+          // aqphd_year2: application.aq_phd[0].year2,
         };
-
+        console.log(data);
         records.push(data);
+        // console.log("akhfiafnais892374892374892374982374", application.aq_graduation);
       })
       .catch((error) => {
         res.status(500).json({ message: error.message });
       });
-  });
+  }
   await csvWriter
     .writeRecords(records) // returns a promise
     .then(() => {
@@ -424,16 +423,13 @@ req.body.forEach(async (id)=>{
     .catch((error) => {
       res.status(500).json({ message: error.message });
     });
-
   res.download("./file.csv", "applicants_data.csv", (error) => {
     if (error) {
       console.log(error);
-      console.log(res.headersSent);
     } else {
-      console.log("File download link sent");
+      console.log("Download link sent");
     }
   });
-  return res.json({ success: true });
 });
 
 export default router;
