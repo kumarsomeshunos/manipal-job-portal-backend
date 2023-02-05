@@ -19,8 +19,8 @@ const ApplicantDetailsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female"],
-    required: [true, "Gender is required"],
+    enum: ["male", "female"],
+    required: [false, "Gender is required"],
   },
   religion: {
     type: String,
