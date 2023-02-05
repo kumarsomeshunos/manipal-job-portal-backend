@@ -41,11 +41,22 @@ const ApplicantDetailsSchema = new mongoose.Schema({
   },
 });
 
+const secondarySchema = new mongoose.Schema({
+  country: String,
+  mode: String,
+  school: String,
+  board: String,
+  passingYear: Number,
+  division: String,
+  percentage: Number,
+});
+
 const higherSecondarySchema = new mongoose.Schema({
   country: String,
   mode: String,
   school: String,
   board: String,
+  stream: String,
   passingYear: Number,
   division: String,
   percentage: Number,
@@ -264,6 +275,10 @@ const applicationSchema = new mongoose.Schema(
     },
 
     // Academic Qualifications
+    aq_secondary: {
+      type: secondarySchema,
+      required: [false, "Secondary Details are required"],
+    },
     aq_higher_secondary: {
       type: higherSecondarySchema,
       required: [false, "Higher Secondary Details are required"],
