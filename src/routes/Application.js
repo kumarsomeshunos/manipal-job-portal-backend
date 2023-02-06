@@ -238,7 +238,7 @@ router.post("/", async (req, res) => {
   await apply
     .save()
     .then((apply) => {
-      // SendEmail(apply.applicant.email, "Form submitted", "Thank you for submitting the form. We will get back to you soon.");
+      SendEmail(apply.applicant.email, "Form submitted", "Thank you for submitting the form. We will get back to you soon.");
       // return res.json({ success: true, applyId: apply._id });
       res.redirect(`http://localhost:3001/${apply._id}`);
     })
