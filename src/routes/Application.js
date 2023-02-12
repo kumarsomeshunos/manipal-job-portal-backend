@@ -12,6 +12,7 @@ import facultiesList from "../faculties.js";
 import auth from "../middleware/auth.js";
 
 import { createObjectCsvWriter as createCsvWriter } from "csv-writer";
+import {createObjectCsvStringifier as createCsvStringifier } from 'csv-writer';
 
 dotenv.config();
 const router = express.Router();
@@ -259,12 +260,17 @@ router.delete("/:id", (req, res) => {
 });
 
 router.post("/downloadcsv", async (req, res) => {
-  req.body.ids.forEach((element) => {
-    console.log(element);
-  });
+
+  if (!req.body.ids) {
+    return res.status(500).json({ message: "No ids provided" });
+  }
+
+  // req.body.ids.forEach((element) => {
+  //   console.log(element);
+  // });
   const records = [];
-  const csvWriter = createCsvWriter({
-    path: "./file.csv",
+  const csvStringifier = createCsvStringifier({
+    // path: "./file.csv",
     header: [
       { id: "firstName", title: "APPLICANT FIRST NAME" },
       { id: "lastName", title: "APPLICANT LAST NAME" },
@@ -416,21 +422,15 @@ router.post("/downloadcsv", async (req, res) => {
         res.status(500).json({ message: error.message });
       });
   }
-  await csvWriter
-    .writeRecords(records) // returns a promise
-    .then(() => {
-      console.log(records);
-    })
-    .catch((error) => {
-      res.status(500).json({ message: error.message });
-    });
-  res.download("./file.csv", "applicants_data.csv", (error) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Download link sent");
-    }
-  });
+
+
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", "attachment; filename=data.csv");
+  res.write(csvStringifier.getHeaderString());
+  res.write(csvStringifier.stringifyRecords(records));
+  res.end();
+
+  
 });
 
 export default router;
