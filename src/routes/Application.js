@@ -12,7 +12,7 @@ import facultiesList from "../faculties.js";
 import auth from "../middleware/auth.js";
 
 import { createObjectCsvWriter as createCsvWriter } from "csv-writer";
-import {createObjectCsvStringifier as createCsvStringifier } from 'csv-writer';
+import { createObjectCsvStringifier as createCsvStringifier } from "csv-writer";
 
 dotenv.config();
 const router = express.Router();
@@ -239,7 +239,11 @@ router.post("/", async (req, res) => {
   await apply
     .save()
     .then((apply) => {
-      SendEmail(apply.applicant.email, "Form submitted", "Thank you for submitting the form. We will get back to you soon.");
+      SendEmail(
+        apply.applicant.email,
+        "Form submitted",
+        "Thank you for submitting the form. We will get back to you soon."
+      );
       // return res.json({ success: true, applyId: apply._id });
       res.redirect(`http://localhost:3001/${apply._id}`);
     })
@@ -260,7 +264,6 @@ router.delete("/:id", (req, res) => {
 });
 
 router.post("/downloadcsv", async (req, res) => {
-
   if (!req.body.ids) {
     return res.status(500).json({ message: "No ids provided" });
   }
@@ -423,14 +426,24 @@ router.post("/downloadcsv", async (req, res) => {
       });
   }
 
-
   res.setHeader("Content-Type", "text/csv");
   res.setHeader("Content-Disposition", "attachment; filename=data.csv");
   res.write(csvStringifier.getHeaderString());
   res.write(csvStringifier.stringifyRecords(records));
   res.end();
+});
 
-  
+router.get("/reject/:id", (req, res) => {
+  Application.findById(req.params.id)
+    .then((application) => {
+      // increment seen count
+      application.status = "rejected";
+      application.save();
+      res.json(200);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message });
+    });
 });
 
 export default router;
