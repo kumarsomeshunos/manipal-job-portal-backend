@@ -446,4 +446,16 @@ router.get("/reject/:id", (req, res) => {
     });
 });
 
+router.get("/accept/:id", (req, res) => {
+  Application.findById(req.params.id)
+    .then((application) => {
+      // increment seen count
+      application.status = "Accepted";
+      application.save();
+      res.json(200);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message });
+    });
+});
 export default router;
