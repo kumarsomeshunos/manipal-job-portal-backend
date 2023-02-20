@@ -244,8 +244,8 @@ router.post("/", async (req, res) => {
         "Form submitted",
         "Thank you for submitting the form. We will get back to you soon."
       );
-      // return res.json({ success: true, applyId: apply._id });
-      res.redirect(`http://172.17.101.106:3000/${apply._id}`);
+      return res.json({ success: true, applyId: apply._id });
+      // res.redirect(`http://172.17.101.106:3000/${apply._id}`);
     })
     .catch((error) => {
       console.log(error);
