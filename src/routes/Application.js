@@ -111,6 +111,8 @@ router.get("/stats", async (req, res) => {
     status: { $ne: "draft" },
   });
 
+  // results.stats.thisDay
+
   results.stats.thisMonth = await Application.countDocuments({
     createdAt: { $gte: new Date(new Date().setDate(1)) },
   });
@@ -250,6 +252,16 @@ router.post("/", async (req, res) => {
     .catch((error) => {
       console.log(error);
       return res.status(500).json({ success: false, error: error });
+    });
+});
+
+router.post("/:id/udpate", (req, res) => {
+  Application.findByIdAndUpdate(req.params.id, req.body)
+    .then((application) => {
+      res.json({ message: "Application Updated", application });
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message });
     });
 });
 
