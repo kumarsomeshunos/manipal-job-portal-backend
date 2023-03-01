@@ -470,4 +470,15 @@ router.get("/accept/:id", (req, res) => {
       res.status(500).json({ message: error.message });
     });
 });
+
+// router.delete("/delete/:id", (req, res) => {
+//   Application.findByIdAndDelete(req.params.id)
+//     .then((application) => {
+//       // increment seen count
+//       res.json(200);
+//     })
+//     .catch((error) => {
+//       res.status(500).json({ message: error.message });
+//     });
+// });
 export default router;
