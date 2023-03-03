@@ -253,6 +253,10 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       required: [false, "City is required"],
     },
+    cr_address: {
+      type: String,
+      required: [false, "Current Address is required"],
+    },
 
     // Native place Information
     native_country: {
@@ -262,6 +266,14 @@ const applicationSchema = new mongoose.Schema(
     native_state: {
       type: String,
       required: [false, "State is required"],
+    },
+    native_city: {
+      type: String,
+      required: [false, "City is required"],
+    },
+    native_address: {
+      type: String,
+      required: [false, "Native Address is required"],
     },
 
     // ID Proof Information
