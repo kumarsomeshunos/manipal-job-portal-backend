@@ -462,7 +462,7 @@ router.get("/accept/:id", (req, res) => {
   Application.findById(req.params.id)
     .then((application) => {
       // increment seen count
-      application.status = "Accepted";
+      application.status = "accepted";
       application.save();
       res.json(200);
     })
