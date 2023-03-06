@@ -193,7 +193,7 @@ const applicationSchema = new mongoose.Schema(
         "draft",
         "submitted",
         "under_consideration",
-        "Accepted",
+        "accepted",
         "rejected",
       ],
       default: "draft",
