@@ -9,6 +9,10 @@ const ApplicantDetailsSchema = new mongoose.Schema({
     type: String,
     required: [true, "Firstname is required"],
   },
+  middleName: {
+    type: String,
+    required: false,
+  },
   lastName: {
     type: String,
     required: [true, "Lastname is required"],
@@ -19,7 +23,7 @@ const ApplicantDetailsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["male", "female"],
+    enum: ["male", "female", "transgender"],
     required: [false, "Gender is required"],
   },
   religion: {
@@ -182,6 +186,7 @@ const knowInManipal = new mongoose.Schema({
   name: String,
   designation: String,
   department: String,
+  relation: String,
   campus: String,
 });
 
