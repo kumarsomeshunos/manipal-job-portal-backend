@@ -47,6 +47,8 @@ const ApplicantDetailsSchema = new mongoose.Schema({
 
 const secondarySchema = new mongoose.Schema({
   country: String,
+  state: String,
+  city: String,
   mode: String,
   school: String,
   board: String,
@@ -57,6 +59,8 @@ const secondarySchema = new mongoose.Schema({
 
 const higherSecondarySchema = new mongoose.Schema({
   country: String,
+  state: String,
+  city: String,
   mode: String,
   school: String,
   board: String,
@@ -68,6 +72,8 @@ const higherSecondarySchema = new mongoose.Schema({
 
 const graduationSchema = new mongoose.Schema({
   country: String,
+  state: String,
+  city: String,
   mode: String,
   institute: String,
   college: String,
@@ -80,6 +86,8 @@ const graduationSchema = new mongoose.Schema({
 
 const postGraduationSchema = new mongoose.Schema({
   country: String,
+  state: String,
+  city: String,
   mode: String,
   institute: String,
   college: String,
@@ -92,6 +100,8 @@ const postGraduationSchema = new mongoose.Schema({
 
 const mPhilSchema = new mongoose.Schema({
   country: String,
+  state: String,
+  city: String,
   mode: String,
   institute: String,
   college: String,
@@ -105,6 +115,8 @@ const mPhilSchema = new mongoose.Schema({
 const phdSchema = new mongoose.Schema({
   status: String,
   country: String,
+  state: String,
+  city: String,
   mode: String,
   institute: String,
   college: String,
@@ -116,6 +128,8 @@ const phdSchema = new mongoose.Schema({
 
 const postDoctoralSchema = new mongoose.Schema({
   country: String,
+  state: String,
+  city: String,
   mode: String,
   institute: String,
   college: String,
@@ -139,6 +153,8 @@ const academicQualificationSchema = new mongoose.Schema({
 const academicExperienceSchema = new mongoose.Schema({
   natureOfJob: String,
   country: String,
+  state: String,
+  city: String,
   university: String,
   college: String,
   position: String,
@@ -150,6 +166,8 @@ const academicExperienceSchema = new mongoose.Schema({
 const nonAcademicExperienceSchema = new mongoose.Schema({
   natureOfJob: String,
   country: String,
+  state: String,
+  city: String,
   organization: String,
   designation: String,
   department: String,
@@ -184,7 +202,7 @@ const peerRecog = new mongoose.Schema({
 
 const knowInManipal = new mongoose.Schema({
   name: String,
-  designation: String,
+  designation: String,  
   department: String,
   relation: String,
   campus: String,
