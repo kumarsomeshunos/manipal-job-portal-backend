@@ -148,6 +148,12 @@ const academicQualificationSchema = new mongoose.Schema({
   urcCsir: Number,
   icmr: Number,
   icar: Number,
+  gate_score: Number,
+  ugcNet_score: Number,
+  ugcJrf_score: Number,
+  urcCsir_score: Number,
+  icmr_score: Number,
+  icar_score: Number,
 });
 
 const academicExperienceSchema = new mongoose.Schema({
@@ -202,7 +208,7 @@ const peerRecog = new mongoose.Schema({
 
 const knowInManipal = new mongoose.Schema({
   name: String,
-  designation: String,  
+  designation: String,
   department: String,
   relation: String,
   campus: String,
