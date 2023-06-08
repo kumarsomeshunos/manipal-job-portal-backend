@@ -211,8 +211,19 @@ const knowInManipal = new mongoose.Schema({
   designation: String,
   department: String,
   relation: String,
-  campus: String,
+  givenOffer: Boolean,
+  joined: Boolean,
+  offerJoined: Boolean,
+  reason: String,
 });
+
+const interviewed = new mongoose.Schema({
+  date: Date,
+  designation: String,
+  department: String,
+  result: String,
+});
+
 
 const applicationSchema = new mongoose.Schema(
   {
@@ -327,14 +338,16 @@ const applicationSchema = new mongoose.Schema(
 
     aq_graduation: [
       {
-        type: graduationSchema,
+        type: [graduationSchema],
         required: [false, "Graduation Details are required"],
       },
     ],
 
     aq_post_graduation: [
       {
-        type: postGraduationSchema,
+        // type: postGraduationSchema,
+        // array of post graduation schema
+        type: [postGraduationSchema],
         required: [false, "Post Graduation Details are required"],
       },
     ],
@@ -549,6 +562,10 @@ const applicationSchema = new mongoose.Schema(
     },
     detailsOfKnown: {
       type: knowInManipal,
+    },
+
+    interviewed: {
+      type: interviewed,
     },
     interviewedInManipal: {
       type: Boolean,
