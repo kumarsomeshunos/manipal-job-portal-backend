@@ -354,19 +354,19 @@ const applicationSchema = new mongoose.Schema(
 
     aq_mphil: [
       {
-        type: mPhilSchema,
+        type: [mPhilSchema],
       },
     ],
 
     aq_phd: [
       {
-        type: phdSchema,
+        type: [phdSchema],
       },
     ],
 
     aq_post_doctoral: [
       {
-        type: postDoctoralSchema,
+        type: [postDoctoralSchema],
       },
     ],
 
@@ -377,14 +377,14 @@ const applicationSchema = new mongoose.Schema(
     // Experience Details
     academicExperience: [
       {
-        type: academicExperienceSchema,
+        type: [academicExperienceSchema],
         required: false,
       },
     ],
 
     nonAcademicExperience: [
       {
-        type: nonAcademicExperienceSchema,
+        type: [nonAcademicExperienceSchema],
         required: false,
       },
     ],
