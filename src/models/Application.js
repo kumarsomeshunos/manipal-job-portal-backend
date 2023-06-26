@@ -43,6 +43,51 @@ const ApplicantDetailsSchema = new mongoose.Schema({
     lowercase: true,
     required: [true, "Email is required"],
   },
+  aadhaar_card: {
+    type: String,
+    required: [false, "Aadhaar Number is required"],
+    },
+  pan_card: {
+    type: String,
+    required: [false, "PAN Number is required"],
+  },
+
+  // Current place Information
+  cr_country: {
+    type: String,
+    required: [false, "Country is required"],
+  },
+
+  cr_state: {
+    type: String,
+    required: [false, "State is required"],
+  },
+  cr_city: {
+    type: String,
+    required: [false, "City is required"],
+  },
+  cr_address: {
+    type: String,
+    required: [false, "Current Address is required"],
+  },
+
+  // Native place Information
+  native_country: {
+    type: String,
+    required: [false, "Country is required"],
+  },
+  native_state: {
+    type: String,
+    required: [false, "State is required"],
+  },
+  native_city: {
+    type: String,
+    required: [false, "City is required"],
+  },
+  native_address: {
+    type: String,
+    required: [false, "Native Address is required"],
+  },
 });
 
 const secondarySchema = new mongoose.Schema({
@@ -222,6 +267,15 @@ const interviewed = new mongoose.Schema({
   designation: String,
   department: String,
   result: String,
+  givenOfferToJoin: {
+    type: String,
+  },
+  joinInManipal: {
+    type: String,
+  },
+  notJoinReason: {
+    type: String,
+  },
 });
 
 
@@ -279,53 +333,6 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       required: [false, "Nature of Job is required"],
     },
-
-    // Current Residence information
-    cr_country: {
-      type: String,
-      required: [false, "Country is required"],
-    },
-    cr_state: {
-      type: String,
-      required: [false, "State is required"],
-    },
-    cr_city: {
-      type: String,
-      required: [false, "City is required"],
-    },
-    cr_address: {
-      type: String,
-      required: [false, "Current Address is required"],
-    },
-
-    // Native place Information
-    native_country: {
-      type: String,
-      required: [false, "Country is required"],
-    },
-    native_state: {
-      type: String,
-      required: [false, "State is required"],
-    },
-    native_city: {
-      type: String,
-      required: [false, "City is required"],
-    },
-    native_address: {
-      type: String,
-      required: [false, "Native Address is required"],
-    },
-
-    // ID Proof Information
-    aadhaar_card: {
-      type: String,
-      required: [false, "Aadhaar Number is required"],
-    },
-    pan_card: {
-      type: String,
-      required: [false, "PAN Number is required"],
-    },
-
     // Academic Qualifications
     aq_secondary: {
       type: secondarySchema,
@@ -396,123 +403,122 @@ const applicationSchema = new mongoose.Schema(
       },
     ],
 
-    // Research Work
-    orcid: String,
-    hIndexSCOPUS: String,
-    hIndexScience: String,
-    CIF: String,
+    research: {
+      orcid: {
+        type: String,
+      },
+      scopus: {
+        type: String,
+      },
+      webofscience: {
+        type: String,
+      },
+      cif: {
+        type: String,
+      },
+      nop_total: {
+        type: Number,
+      },
+      nop_ugc_care_list: {
+        type: Number,
+      },
+      nop_sci: {
+        type: Number,
+      },
+      nop_web_science: {
+        type: Number,
+      },
+      nop_google_scholar: {
+        type: Number,
+      },
+      nop_scopus: {
+        type: Number,
+      },
+      nop_three_total: {
+        type: Number,
+      },
+      nop_three_ugc_care_list: {
+        type: Number,
+      },
+      nop_three_sci: {
+        type: Number,
+      },
+      nop_three_web_science: {
+        type: Number,
+      },
+      nop_three_google_scholar: {
+        type: Number,
+      },
+      nop_three_scopus: {
+        type: Number,
+      },
+      number_citations: {
+        type: Number,
+      },
+      completed_funded_projects: {
+        type: Number,
+      },
+      amount_completed_funded_projects: {
+        type: Number,
+      },
+      ongoing_funded_projects: {
+        type: Number,
+      },
+      amount_ongoing_funded_projects: {
+        type: Number,
+      },
+      presented_total: {
+        type: Number,
+      },
+      presented_national: {
+        type: Number,
+      },
+      presented_international: {
+        type: Number,
+      },
+      attended_total: {
+        type: Number,
+      },
+      attended_national: {
+        type: Number,
+      },
+      attended_international: {
+        type: Number,
+      },
+      organized_total: {
+        type: Number,
+      },
+      organized_national: {
+        type: Number,
+      },
+      organized_international: {
+        type: Number,
+      },
+      guidance_completed_independent_mphil: {
+        type: Number,
+      },
+      guidance_completed_independent_phd: {
+        type: Number,
+      },
+      guidance_completed_supervisor_mphil: {
+        type: Number,
+      },
+      guidance_completed_supervisor_phd: {
+        type: Number,
+      },
+      guidance_supervision_independent_mphil: {
+        type: Number,
+      },
+      guidance_supervision_independent_phd: {
+        type: Number,
+      },
+      guidance_supervision_supervisor_mphil: {
+        type: Number,
+      },
+      guidance_supervision_supervisor_phd: {
+        type: Number,
+      }
 
-    orcid: {
-      type: String,
-    },
-
-    hIndexSCOPUS: {
-      type: String,
-    },
-
-    hIndexScience: {
-      type: String,
-    },
-
-    CIF: {
-      type: String,
-    },
-
-    researchPaperPublishedTotal: {
-      type: Number,
-    },
-    researchPaperPublishedTotalUGCCareList: {
-      type: Number,
-    },
-    researchPaperPublishedTotalSCI: {
-      type: Number,
-    },
-    researchPaperPublishedTotalWebScience: {
-      type: Number,
-    },
-    researchPaperPublishedTotalScopus: {
-      type: Number,
-    },
-    researchPaperPublishedThree: {
-      type: Number,
-    },
-    researchPaperPublishedThreeUGCCareList: {
-      type: Number,
-    },
-    researchPaperPublishedThreeSCI: {
-      type: Number,
-    },
-    researchPaperPublishedThreeWebScience: {
-      type: Number,
-    },
-    researchPaperPublishedThreeScopus: {
-      type: Number,
-    },
-    nOfCitationsThree: {
-      type: Number,
-    },
-    nOfFundedProjectsCompletedThree: {
-      type: Number,
-    },
-    amountOfFundedProjectsCompletedThree: {
-      type: Number,
-    },
-    nOfFundedProjectsOngoingThree: {
-      type: Number,
-    },
-    amountOfFundedProjectsOngoingThree: {
-      type: Number,
-    },
-    nOfCSWTPresentedTotal: {
-      type: Number,
-    },
-    nOfCSWTPresentedNational: {
-      type: Number,
-    },
-    nOfCSWTPresentedInternational: {
-      type: Number,
-    },
-    nOfCSWTAttendedTotal: {
-      type: Number,
-    },
-    nOfCSWTAttendedNational: {
-      type: Number,
-    },
-    nOfCSWTAttendedInternational: {
-      type: Number,
-    },
-    nOfCSWTOrganisedTotal: {
-      type: Number,
-    },
-    nOfCSWTOrganisedNational: {
-      type: Number,
-    },
-    nOfCSWTOrganisedInternational: {
-      type: Number,
-    },
-    researchGuidSuccCompMPhilIndep: {
-      type: Number,
-    },
-    researchGuidSuccCompMPhDIndep: {
-      type: Number,
-    },
-    researchGuidSuccCompMPhilCoSupervisor: {
-      type: Number,
-    },
-    researchGuidSuccCompMPhDCoSupervisor: {
-      type: Number,
-    },
-    researchGuidUnderSupervMPhilIndep: {
-      type: Number,
-    },
-    researchGuidUnderSupervMPhDIndep: {
-      type: Number,
-    },
-    researchGuidUnderSupervMPhilCoSupervisor: {
-      type: Number,
-    },
-    researchGuidUnderSupervMPhDCoSupervisor: {
-      type: Number,
     },
 
     // Books Authored
@@ -558,32 +564,26 @@ const applicationSchema = new mongoose.Schema(
       type: Number,
     },
     knowAnyoneInManipal: {
-      type: Boolean,
+      type: String,
     },
     detailsOfKnown: {
       type: knowInManipal,
     },
 
+    interviewedInManipal: {
+      type: String,
+    },
     interviewed: {
       type: interviewed,
     },
-    interviewedInManipal: {
-      type: Boolean,
+    convicted: {
+        type: String,
     },
-    givenOfferToJoin: {
-      type: Boolean,
-    },
-    joinInManipal: {
-      type: Boolean,
-    },
-    joinedInManipalFrom: {
-      type: Date,
-    },
-    joinedInManipalTo: {
-      type: Date,
+    convictedDetails: {
+        type: String,
     },
     caseAgainstYou: {
-      type: Boolean,
+      type: String,
     },
     caseDetails: {
       type: String,
