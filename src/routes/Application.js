@@ -258,10 +258,6 @@ router.post("/", async (req, res) => {
     });
 });
 
-const preProcessor = (reqBody) => {
-  reqBody
-}
-
 router.post("/:id/udpate", (req, res) => {
   Application.findByIdAndUpdate(req.params.id, req.body)
     .then((application) => {
@@ -477,6 +473,22 @@ router.get("/accept/:id", (req, res) => {
       res.status(500).json({ message: error.message });
     });
 });
+
+const viewProcessor = (application) => {
+  return application;
+}
+
+router.get("/view/:id", (req, res) => {
+    Application.findById(req.params.id)
+        .then((application) => {
+          res.json(application);
+          // increment seen count
+          application.viewCount += 1;
+          application.save();
+      }).catch((error) => {
+        res.status(500).json({ message: error.message });
+      });
+})
 
 // router.delete("/delete/:id", (req, res) => {
 //   Application.findByIdAndDelete(req.params.id)
