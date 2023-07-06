@@ -224,15 +224,17 @@ router.get("/", async (req, res) => {
 // router for getting specific application
 router.get("/:id", (req, res) => {
   Application.findById(req.params.id)
-    .then((application) => {
-      res.json(application);
-      // increment seen count
-      application.viewCount += 1;
-      application.save();
+    .exec((err, application) => {
+      if (err) {
+        res.status(500).json(err)
+      } else if (!application) {
+        res.status(404).json({ message: "Application not found" })
+      } else {
+        res.json(application);
+        application.viewCount += 1;
+        application.save();
+      }
     })
-    .catch((error) => {
-      res.status(500).json({ message: error.message });
-    });
 });
 
 router.post("/", async (req, res) => {
