@@ -165,10 +165,10 @@ const phdSchema = new mongoose.Schema({
   mode: String,
   institute: String,
   college: String,
-  year: Number,
+  enrollmentYear: Number,
   area: String,
   teachingExperience: Boolean,
-  year2: Number,
+  completionYear: Number,
 });
 
 const postDoctoralSchema = new mongoose.Schema({
@@ -215,6 +215,7 @@ const academicExperienceSchema = new mongoose.Schema({
 });
 
 const nonAcademicExperienceSchema = new mongoose.Schema({
+  type: String,
   natureOfJob: String,
   country: String,
   state: String,
@@ -345,7 +346,7 @@ const applicationSchema = new mongoose.Schema(
 
     aq_graduation: [
       {
-        type: [graduationSchema],
+        type: graduationSchema,
         required: [false, "Graduation Details are required"],
       },
     ],
@@ -354,26 +355,26 @@ const applicationSchema = new mongoose.Schema(
       {
         // type: postGraduationSchema,
         // array of post graduation schema
-        type: [postGraduationSchema],
+        type: postGraduationSchema,
         required: [false, "Post Graduation Details are required"],
       },
     ],
 
     aq_mphil: [
       {
-        type: [mPhilSchema],
+        type: mPhilSchema,
       },
     ],
 
     aq_phd: [
       {
-        type: [phdSchema],
+        type: phdSchema,
       },
     ],
 
     aq_post_doctoral: [
       {
-        type: [postDoctoralSchema],
+        type: postDoctoralSchema,
       },
     ],
 
@@ -384,14 +385,14 @@ const applicationSchema = new mongoose.Schema(
     // Experience Details
     academicExperience: [
       {
-        type: [academicExperienceSchema],
+        type: academicExperienceSchema,
         required: false,
       },
     ],
 
     nonAcademicExperience: [
       {
-        type: [nonAcademicExperienceSchema],
+        type: nonAcademicExperienceSchema,
         required: false,
       },
     ],

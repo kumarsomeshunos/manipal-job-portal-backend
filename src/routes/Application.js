@@ -229,7 +229,6 @@ router.get("/:id", (req, res) => {
       // increment seen count
       application.viewCount += 1;
       application.save();
-      console.log(application)
     })
     .catch((error) => {
       res.status(500).json({ message: error.message });
@@ -237,9 +236,6 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  console.log("Application submitted");
-  console.log(req.body);
-  console.log("Application submitted over");
   const apply = new Application(req.body);
   await apply
     .save()
@@ -473,10 +469,6 @@ router.get("/accept/:id", (req, res) => {
       res.status(500).json({ message: error.message });
     });
 });
-
-const viewProcessor = (application) => {
-  return application;
-}
 
 router.get("/view/:id", (req, res) => {
     Application.findById(req.params.id)
