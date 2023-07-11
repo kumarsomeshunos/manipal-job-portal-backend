@@ -13,6 +13,7 @@ import auth from "../middleware/auth.js";
 
 import { createObjectCsvWriter as createCsvWriter } from "csv-writer";
 import { createObjectCsvStringifier as createCsvStringifier } from "csv-writer";
+import moment from "moment";
 
 dotenv.config();
 const router = express.Router();
@@ -159,6 +160,33 @@ router.get("/stats", async (req, res) => {
 
   res.json(results);
 });
+
+router.get("/graph", async (req, res) => {
+
+  const currentDate = moment().toDate();
+  const academic = {};
+  const nonAcademic = {}
+  const counter = (date, jobType) => {
+    return Application.countDocuments({
+      createdAt: {
+        $gte: moment(date).startOf('day').toDate(),
+        $lte: moment(date).endOf('day').toDate()
+      },
+      jobType: jobType,
+    })
+  }
+
+  for (let i = 6; i >= 0; i--) {
+    academic[(moment(currentDate).subtract(i, 'days')).toISOString()] = await counter(moment().subtract(i, 'days').toDate(), "academic");
+    nonAcademic[(moment(currentDate).subtract(i, 'days')).toISOString()] = await counter(moment().subtract(i, 'days').toDate(), "non_academic");
+  }
+
+  res.status(200).json({
+    academic: academic,
+    non_academic: nonAcademic
+  });
+
+})
 
 router.get("/", async (req, res) => {
   // Fetch applications with pagination and filtering
