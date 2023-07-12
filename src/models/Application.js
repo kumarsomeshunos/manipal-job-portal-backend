@@ -315,14 +315,18 @@ const applicationSchema = new mongoose.Schema(
       required: [false, "Faculty is required"],
     },
 
-    school_main: {
+    designation: {
       type: String,
-      required: [false, "School is required"],
+      required: [false, "Designation is required"],
+    },
+    department: {
+        type: String,
+        required: [false, "Department is required"],
     },
 
-    department: {
+    school: {
       type: String,
-      required: [false, "Department is required"],
+      required: [false, "School is required"],
     },
 
     acad_domain: {
