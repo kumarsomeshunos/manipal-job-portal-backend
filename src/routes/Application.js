@@ -98,19 +98,16 @@ router.get("/stats", async (req, res) => {
   results.stats = {};
   results.stats.total = await Application.countDocuments();
   results.stats.totalSubmitted = await Application.countDocuments({
-    status: { $ne: "draft" },
+    status: "draft",
   });
   results.stats.totalAcademic = await Application.countDocuments({
     jobType: "academic",
-    status: { $ne: "draft" },
   });
   results.stats.totalNonAcademic = await Application.countDocuments({
     jobType: "non_academic",
-    status: { $ne: "draft" },
   });
   results.stats.totalAdmin = await Application.countDocuments({
     jobType: "administration",
-    status: { $ne: "draft" },
   });
 
   // results.stats.thisDay
