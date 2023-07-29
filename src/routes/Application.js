@@ -98,7 +98,6 @@ router.get("/stats", async (req, res) => {
   results.stats = {};
   results.stats.total = await Application.countDocuments();
   results.stats.totalSubmitted = await Application.countDocuments({
-    status: "draft",
   });
   results.stats.totalAcademic = await Application.countDocuments({
     jobType: "academic",
