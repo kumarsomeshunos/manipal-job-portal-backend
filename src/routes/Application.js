@@ -23,30 +23,22 @@ const router = express.Router();
 const app = express();
 app.use(bodyParser.json());
 
-const spacesEndpoint = new AWS.Endpoint(
-  process.env.S3_ENDPOINT || "s3.us-west-000.backblazeb2.com"
-);
-const s3 = new AWS.S3({
-  endpoint: spacesEndpoint,
-});
-
-var upload = await multer({
+const upload = await multer({
   limits: {
     // limit 3 mb
     fileSize: 3 * 1024 * 1024,
   },
-  storage: multerS3({
-    s3: s3,
-    acl: "public-read",
-    bucket: process.env.S3_BUCKET || "portaldev",
-    key: function (req, file, cb) {
-      console.log(file);
-      cb(null, Date.now() + "-" + file.originalname);
+  storage: multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, './uploads');
     },
+    filename: function (req, file, callback) {
+      callback(null, req.params.id + '-' + Date.now() + '-' + file.originalname);
+    }
   }),
 }).fields([
-  { name: "picture", maxCount: 1 },
-  { name: "resume", maxCount: 1 },
+  {name: "picture", maxCount: 1},
+  {name: "resume", maxCount: 1},
 ]);
 
 // FILE UPLOAD CONFIG END
