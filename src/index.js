@@ -7,11 +7,26 @@ import adminAuthRouter from "./routes/AdminAuth.js";
 import applicationRouter from "./routes/Application.js";
 import imageRouter from "./routes/Images.js"
 import cors from 'cors';
+import * as fs from "fs";
 // import dashboardRouter from "./routes/Dashboard.js";
 
 
 dotenv.config({path:'./.env'})
 const app = express();
+
+fs.exists("./uploads", (exists) => {
+    if (!exists) {
+        fs.mkdir("./uploads", (err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("uploads folder created");
+        }
+        });
+    } else {
+        console.log("uploads folder already exists");
+    }
+})
 
 app.use(cors({
     origin: true,

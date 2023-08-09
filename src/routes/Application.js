@@ -15,6 +15,8 @@ import { createObjectCsvWriter as createCsvWriter } from "csv-writer";
 import { createObjectCsvStringifier as createCsvStringifier } from "csv-writer";
 import moment from "moment";
 import csvStringifier from "./csvStringifier.js";
+import * as fs from "fs";
+import path from "path";
 
 dotenv.config();
 const router = express.Router();
@@ -64,8 +66,10 @@ router.put("/:id", async (req, res) => {
             res.status(500).send(err);
           } else {
             console.log(req.files);
-            application.photo = req.files.picture[0].location;
-            application.resume = req.files.resume[0].location;
+            console.log(req.files.picture);
+            console.log(req.files.resume);
+            application.photo = req.files.picture[0].filename;
+            application.resume = req.files.resume[0].filename;
             application.status = "submitted";
             application.save();
             res.status(200).send("File uploaded successfully");
@@ -375,6 +379,13 @@ router.get("/view/:id", (req, res) => {
       }).catch((error) => {
         res.status(500).json({ message: error.message });
       });
+})
+
+router.get("/uploads/:filename", (req, res) => {
+    const filename = req.params.filename;
+    const file = "./uploads/" + filename;
+    console.log(file);
+    res.download(file);
 })
 
 // router.delete("/delete/:id", (req, res) => {
